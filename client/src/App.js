@@ -4,7 +4,7 @@ import SearchBooks from './pages/SearchBooks';
 import SavedBooks from './pages/SavedBooks';
 import Navbar from './components/Navbar';
 
-function App() {
+export default function App() {
   return (
     <Router>
       <>
@@ -28,4 +28,3 @@ function App() {
   );
 }
 
-export default App;
