@@ -2,7 +2,7 @@
 {
   "name": "googlebooks-app",
   "version": "1.0.0",
-  "description": "main",
+  "description": "json file that contain all strips for all the client/server and main root",
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
@@ -17,3 +17,5 @@
     "concurrently": "^5.3.0"
   }
 }
+
+

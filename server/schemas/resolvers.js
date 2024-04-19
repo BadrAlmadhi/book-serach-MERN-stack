@@ -1,3 +1,4 @@
+// here we are
 const User = require("../models/User");
 const { signToken } = require("../utils/auth");
 const { AuthenticationError } = require("apollo-server-express");
@@ -16,13 +17,14 @@ const resolvers = {
       throw new AuthenticationError("Not Logged In, Please LogIn");
     },
   },
-  mutation: {
+
+  Mutation: {
     addUser: async (parent, args) => {
       const user = await User.create(args);
       const token = signToken(user);
       return { token, user };
     },
-    logIn: async (parent, { email, password }) => {
+    login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
       if (!user) {
         throw new AuthenticationError("Incorrect email or password");
@@ -34,7 +36,18 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    saveBook: async (parent, { book }, context) => {
+    saveBook: async (parent, { newBook }, context) => {
+      if (context.user) {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $push: { savedBooks: newBook } },
+          { new: true }
+        );
+        return updatedUser;
+      }
+      throw new AuthenticationError("Not Logged In , Please LogIn");
+    },
+    removeBook: async (parent, { bookId }, context) => {
       if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
@@ -43,6 +56,7 @@ const resolvers = {
         );
         return updatedUser;
       }
+      throw new AuthenticationError("Not Logged In, Please LogIn");
     },
   },
 };
