@@ -7,10 +7,10 @@ import { useMutation } from "@apollo/client";
 
 const LoginForm = () => {
   const [userFormData, setUserFormData] = useState({ email: "", password: "" });
-  const [validated, setValidated] = useState(false);
+  const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  const [userLogin, { error }] = useMutation(QUERY_LOGIN);
+  const [LoginUser, { error }] = useMutation(QUERY_LOGIN);
 
   useEffect(() => {
     if (error) {
@@ -30,28 +30,26 @@ const LoginForm = () => {
 
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
+      event.preventDefault();
       event.stopPropagation();
     } else {
       try {
-        const { data } = await userLogin({
+        const response = await LoginUser({
           variables: { ...userFormData },
         });
-        console.log(data);
-        Auth.login(data.login.token);
+        console.log(response);
+        Auth.login(response.data.login.token);
       } catch (err) {
         console.error(err);
         setShowAlert(true);
       }
     }
 
-    setValidated(true);
-
     setUserFormData({
       email: "",
       password: "",
     });
   };
-
 
   return (
     <>
